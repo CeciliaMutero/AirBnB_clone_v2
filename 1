@@ -122,7 +122,7 @@ class HBNBCommand(cmd.Cmd):
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        params = {'__class__': class_name}
+        params = {}
         for arg in args[1:]:
             split_arg = arg.split('=')
             if len(split_arg) != 2:
@@ -141,27 +141,18 @@ class HBNBCommand(cmd.Cmd):
                     except ValueError:
                         continue
             params[key] = value
-        params['created_at'] = datetime.now().isoformat()
-        params['updated_at'] = datetime.now().isoformat()
+        params['updated_at'] = datetime.now()
         if 'created_at' not in params:
-            params['created_at'] = datetime.now().isoformat()
+            params['created_at'] = datetime.now()
         new_instance = HBNBCommand.classes[class_name](**params)
-        storage.new(new_instance)
         storage.save()
-        storage.reload()
         print(new_instance.id)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
         print("[Usage]: create <className>\n")
-        print("<param syntax>: <key name>=<value>")
-        print("<value syntax>:")
-        print("String: \"<value>\" => starts with a double quote")
-        print("  any double quote inside the value must be escaped with a backslash \\")
-        print("  all underscores _ must be replaced by spaces")
-        print("Float: <unit>.<decimal> => contains a dot .")
-        print("Integer: <number> => default case")
 
     def do_show(self, args):
         """ Method to show an individual object """
@@ -232,8 +223,9 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
+
         if args:
-            args = args.split(' ')[0]
+            args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
@@ -243,6 +235,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             for k, v in storage._FileStorage__objects.items():
                 print_list.append(str(v))
+
         print(print_list)
 
     def help_all(self):

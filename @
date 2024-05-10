@@ -141,27 +141,18 @@ class HBNBCommand(cmd.Cmd):
                     except ValueError:
                         continue
             params[key] = value
-        params['created_at'] = datetime.now().isoformat()
-        params['updated_at'] = datetime.now().isoformat()
+        params['updated_at'] = datetime.now()
         if 'created_at' not in params:
-            params['created_at'] = datetime.now().isoformat()
+            params['created_at'] = datetime.now()
         new_instance = HBNBCommand.classes[class_name](**params)
-        storage.new(new_instance)
         storage.save()
-        storage.reload()
         print(new_instance.id)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
         print("[Usage]: create <className>\n")
-        print("<param syntax>: <key name>=<value>")
-        print("<value syntax>:")
-        print("String: \"<value>\" => starts with a double quote")
-        print("  any double quote inside the value must be escaped with a backslash \\")
-        print("  all underscores _ must be replaced by spaces")
-        print("Float: <unit>.<decimal> => contains a dot .")
-        print("Integer: <number> => default case")
 
     def do_show(self, args):
         """ Method to show an individual object """
@@ -231,20 +222,20 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        print_list = []
+        args = args.split()
+        instances = []
         if args:
-            args = args.split(' ')[0]
-            if args not in HBNBCommand.classes:
+            if args[0] not in storage.classes:
                 print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+            else:
+                for instance in storage.all().values():
+                    if type(instance).__name__ == arg:
+                        instances.append(str(instance))
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-        print(print_list)
-
+            for instance in storage.all().values():
+                instances.append(str(instance))
+        if instances:
+            print(instances)
     def help_all(self):
         """ Help information for the all command """
         print("Shows all objects, or all of a class")
