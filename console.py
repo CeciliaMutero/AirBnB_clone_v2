@@ -12,6 +12,7 @@ from models.amenity import Amenity
 from models.review import Review
 from datetime import datetime
 
+
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
 
@@ -73,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] == '{' and pline[-1] =='}':
+                    if pline[0] == '{' and pline[-1] == '}':
                         _args = pline
                     else:
                         _args = pline.replace(',', '')
@@ -157,8 +158,6 @@ class HBNBCommand(cmd.Cmd):
         print("[Usage]: create <className>\n")
         print("<param syntax>: <key name>=<value>")
         print("<value syntax>:")
-        print("String: \"<value>\" => starts with a double quote")
-        print("  any double quote inside the value must be escaped with a backslash \\")
         print("  all underscores _ must be replaced by spaces")
         print("Float: <unit>.<decimal> => contains a dot .")
         print("Integer: <number> => default case")
@@ -349,6 +348,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
